@@ -16,8 +16,9 @@ var update_states = function(country_select) {
     // hide and disable input
     wrapper_div.find('input.state_name').attr('disabled', true).hide()
     // recreate state selection list
-    replacement = wrapper_div.find('select.state');
-    replacement.children().remove().end()
+    var replacement = wrapper_div.find('select.state');
+    var old_value = replacement[0].value;
+    replacement.children().remove().end();
 
     var states_with_blank = [["",""]].concat(states);
     $.each(states_with_blank, function(pos,id_nm) {
@@ -25,6 +26,9 @@ var update_states = function(country_select) {
       .attr('value', id_nm[0])
       .html(id_nm[1]);
       replacement.append(opt);
+
+      if (id_nm[0] == old_value) { opt.attr('selected', 'true') }
+        // set this directly IFF the old value is still valid
     });
   } else {
     // hide and disable select
