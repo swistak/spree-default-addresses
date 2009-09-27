@@ -4,6 +4,14 @@
   <% else %>
     <%= javascript_include_tag 'addresses' %>
   <% end %>
+
+  <style type="text/css">
+    .inner > div label{
+      width: 200px;
+      display: block;
+      float: left;
+    }
+  </style>
 <% end %>
 
 <% form_tag do %>

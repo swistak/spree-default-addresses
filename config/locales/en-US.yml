@@ -1,0 +1,15 @@
+---
+en-US:
+  activerecord:
+    attributes:
+      address:
+        address1: Address
+        address2: "Address (contd.)"
+        city: City
+        firstname: "First Name"
+        lastname: "Last Name"
+        phone: Phone
+        zipcode: "Zip Code"
+        state: State
+        country: Country
+  my_addresses: My addresses
