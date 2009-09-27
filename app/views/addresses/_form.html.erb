@@ -1,0 +1,31 @@
+<h2><%= t(address_type)%></h2>
+<div class="inner">
+  <%= hidden_field_tag :address_type, address_type %>
+
+  <% if address_type == :ship_address %>
+    <p>
+      <input id="ship_address_use_bill_address" name="ship_address[use_bill_address]" type="checkbox" checked="<%= @ship_address.same_as @bill_address %>"/>
+      <label for="ship_address_use_bill_address" id="use_billing"><%= t("use_billing_address") %></label>
+    </p>
+  <% end %>
+
+  <div id="<%= address_type %>">
+    <% ["firstname", "lastname", "address1", "address2", "country", "state", "city", "zipcode", "phone"].each do |field| %>
+      <p id="p-<%= "#{address_type}-#{field}" %>" class="address-form-field">
+        <%= address_form.label field, t(field, :scope => [:activerecord, :attributes, :address]) %>
+        <% if field == "country" %>
+          <%= address_form.collection_select "#{field}_id", instance_variable_get("@#{field.pluralize}"), :id, :name, {:include_blank => true}, :class => field %><span class="req">*</span>
+          <%= address_form.error_message_on "#{field}_id" %>
+        <% elsif  field == "state" %>
+          <%= address_form.collection_select "#{field}_id", instance_variable_get("@#{field.pluralize}"), :id, :name, {}, :class => field %>
+          <%= address_form.text_field 'state_name', :class => "required state_name" -%><span class="req">*</span>
+          <%= address_form.error_message_on "#{field}_id" %>
+          <%= address_form.error_message_on 'state_name' %>
+        <% else %>
+          <%= address_form.text_field field, :class => "required #{field}" -%><span class="req">*</span>
+          <%= address_form.error_message_on field %>
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+</div>

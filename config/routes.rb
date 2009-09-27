@@ -1,0 +1,1 @@
+map.resources :users, :has_many => :addresses
