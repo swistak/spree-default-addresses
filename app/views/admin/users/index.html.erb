@@ -1,0 +1,74 @@
+<div class='toolbar'>
+  <ul class='actions'>
+    <li>
+      <%= button_link_to t("new_user"), new_object_url, :icon => 'add' %></p>
+    </li>
+  </ul>
+  <br class='clear' />
+</div>
+
+<h1><%= t("listing_users") %></h1>
+
+<table class="index">
+  <thead>
+    <tr>
+      <% if Spree::Version::Major.to_i > 0 || Spree::Version::Minor.to_i > 8 %>
+        <th><%= order @search, :by => :email, :as => t("user") %></th>
+      <% else %>
+        <th><%= order_by_link :email, :text => t("user") %></th>
+      <% end %>
+      <th><%= t("action") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @collection.each do |user|%>
+      <tr id="<%= dom_id user %>">
+        <td width="350px"><%=link_to user.email, object_url(user) %></td>
+        <td>
+          <%= link_to_edit user %> &nbsp;
+          <%= link_to_delete user %> &nbsp;
+          <%= link_to("Edit addresses", user_addresses_path(user)) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if Spree::Version::Major.to_i > 0 || Spree::Version::Minor.to_i > 8 %>
+
+  <%= will_paginate(:prev => "&#171; #{t('previous')}", :next => "#{t('next')} &#187;") %>
+
+  <% content_for :sidebar do %>
+    <% form_for @search do |f| %>
+      <div class="box">
+        <h3><%= t(:search) %></h3>
+        <p>
+          <%= t("email") %><br />
+          <%= f.text_field :email_contains, :size=>18 %>
+        </p>
+        <p><%= button t("search") %></p>
+      </div>
+    <% end %>
+  <% end %>
+
+<% else %>
+
+  <%= page_links(:prev => "&#171; #{t('previous')}", :next => "#{t('next')} &#187;") if @search.page_count > 1 %>
+
+  <% content_for :sidebar do %>
+    <% form_for [:admin, @search] do |f| %>
+      <div class="box">
+        <h3><%= t(:search) %></h3>
+        <% f.fields_for @search.conditions do |user| %>
+          <p>
+            <%= t("email") %><br />
+            <%= user.text_field :lower_of_email, :size=>18 %>
+          </p>
+          <p><%= button t("search") %></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+
