@@ -1,6 +1,6 @@
 <% content_for :head do %>
   <% if Spree::Version::Minor.to_i >= 9 || Spree::Version::Major.to_i > 0 %>
-    <%= javascript_include_tag '/states', 'addresses' %>
+    <%= javascript_include_tag '/store/states', 'addresses' %>
   <% else %>
     <%= javascript_include_tag 'addresses' %>
   <% end %>
