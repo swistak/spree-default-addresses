@@ -33,7 +33,7 @@ class DefaultAddressesExtension < Spree::Extension
 
       # can modify an address if it's not been used in an order (but checkouts controller has finer control)
       def self.default(user = nil)
-        new(:country_id => Spree::Config[:default_country_id], :user => user)
+        new(:country => Country.find(Spree::Config[:default_country_id]), :user => user)
       end
 
       def zone
