@@ -26,3 +26,23 @@ namespace :spree do
     end
   end
 end
+
+desc "Imports last addresses as defaults"
+task :get_default_addresses => :environment do
+  User.find(:all).each do |user|
+    orders_with_addresses = user.orders(:order => "created_at ASC").select{|o|
+      o.bill_address && o.shipment && o.shipment.address
+    }
+    if last_order = orders_with_addresses.last
+      puts "#{user.email}: Found addresses"
+      bill_address = last_order.bill_address
+      ship_address = last_order.shipment.address
+      user.update_attributes!(
+        :bill_address_id => bill_address && bill_address.id,
+        :ship_address_id => ship_address && ship_address.id
+      )
+    else
+      puts "#{user.email}: Not found address"
+    end
+  end
+end

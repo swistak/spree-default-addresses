@@ -54,7 +54,7 @@ function init_addresses_state() {
 $(document).ready(function () {
   if(typeof(state_mapper) == "undefined") {
     //Initial state mapper on page load
-    $.getJSON('/store/states.js', function(json) {
+    $.getJSON(states_path, function(json) {
       state_mapper = json;
       init_addresses_state();
     });
