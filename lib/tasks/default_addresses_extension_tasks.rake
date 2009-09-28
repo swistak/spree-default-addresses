@@ -42,7 +42,7 @@ task :get_default_addresses => :environment do
         :ship_address_id => ship_address && ship_address.id
       )
     else
-      puts "#{user.email}: Not found address"
+      puts "#{user.email}: Could not find any usefull addresses associated with user"
     end
   end
 end

@@ -11,8 +11,8 @@ module Spree::Checkout
     @order.update_attributes(params[:order])
 
     # additional default values needed for checkout
-    @order.bill_address ||= (current_user && current_user.bill_address) || Address.new(:country => @default_country)
-    @order.ship_address ||= (current_user && current_user.ship_address) || Address.new(:country => @default_country)
+    @order.bill_address ||= (current_user && current_user.bill_address.clone) || Address.default(current_user)
+    @order.ship_address ||= (current_user && current_user.ship_address.clone) || Address.default(current_user)
     if @order.creditcards.empty?
       @order.creditcards.build(:month => Date.today.month, :year => Date.today.year)
     end
@@ -58,10 +58,10 @@ module Spree::Checkout
           redirect_to order_url(@order, order_params)
         end
         format.js {render :json => { :order_total => number_to_currency(@order.total), 
-                                     :ship_amount => number_to_currency(@order.ship_amount), 
-                                     :tax_amount => number_to_currency(@order.tax_amount),
-                                     :available_methods => rate_hash}.to_json,
-                          :layout => false}
+            :ship_amount => number_to_currency(@order.ship_amount),
+            :tax_amount => number_to_currency(@order.tax_amount),
+            :available_methods => rate_hash}.to_json,
+          :layout => false}
       end
       
     end

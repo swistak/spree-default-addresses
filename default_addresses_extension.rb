@@ -55,7 +55,7 @@ class DefaultAddressesExtension < Spree::Extension
 
       # can modify an address if it's not been used in an order (but checkouts controller has finer control)
       def self.default(user = nil)
-        new(:country => Country.find(Spree::Config[:default_country_id]), :user => user)
+        new(:country_id => Spree::Config[:default_country_id], :user => user)
       end
 
       def zone
@@ -72,6 +72,10 @@ class DefaultAddressesExtension < Spree::Extension
       end
       alias same_as same_as?
 
+      def clone
+        editable? ? self : super
+      end
+
       def to_s
         "#{full_name}: #{address1}"
       end
@@ -82,6 +86,17 @@ class DefaultAddressesExtension < Spree::Extension
 
       belongs_to :ship_address, :class_name => "Address", :foreign_key => "ship_address_id"
       belongs_to :bill_address, :class_name => "Address", :foreign_key => "bill_address_id"
+    end
+
+    Order.class_eval do
+      alias old_complete_order complete_order
+      def complete_order
+        self.user.update_attributes!(
+          :bill_address_id => self.bill_address_id,
+          :ship_address_id => self.ship_address_id
+        ) if self.bill_address_id && self.ship_address_id
+        old_complete_order
+      end
     end
   end
 end
