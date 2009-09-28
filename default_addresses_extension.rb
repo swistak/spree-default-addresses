@@ -66,17 +66,6 @@ class DefaultAddressesExtension < Spree::Extension
       belongs_to :bill_address, :class_name => "Address", :foreign_key => "bill_address_id"
     end
 
-    Order.class_eval do
-      unless self.instance_methods.include?("old_complete_order")
-        alias old_complete_order complete_order
-        def complete_order
-          self.user.update_attributes!(
-            :bill_address_id => self.bill_address_id,
-            :ship_address_id => self.ship_address_id
-          ) if self.bill_address_id && self.ship_address_id
-          old_complete_order
-        end
-      end
-    end
+    OrderTransactionObserver.instance
   end
 end
