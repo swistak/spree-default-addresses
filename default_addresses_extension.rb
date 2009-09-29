@@ -64,6 +64,10 @@ class DefaultAddressesExtension < Spree::Extension
 
       belongs_to :ship_address, :class_name => "Address", :foreign_key => "ship_address_id"
       belongs_to :bill_address, :class_name => "Address", :foreign_key => "bill_address_id"
+
+      # prevents a user from submitting a crafted form that bypasses activation
+      # anything else you want your user to change should be added here.
+      attr_accessible :email, :password, :password_confirmation, :ship_address_id, :bill_address_id
     end
 
     OrderTransactionObserver.instance

@@ -11,8 +11,13 @@ module Spree::Checkout
     @order.update_attributes(params[:order])
 
     # additional default values needed for checkout
-    @order.bill_address ||= (current_user && current_user.bill_address.clone) || Address.default(current_user)
-    @order.ship_address ||= (current_user && current_user.ship_address.clone) || Address.default(current_user)
+    if current_user
+      @order.bill_address ||= current_user.bill_address && current_user.bill_address.clone
+      @order.ship_address ||= current_user.ship_address && current_user.ship_address.clone
+    end
+    @order.bill_address ||= Address.default(current_user)
+    @order.ship_address ||= Address.default(current_user)
+    
     if @order.creditcards.empty?
       @order.creditcards.build(:month => Date.today.month, :year => Date.today.year)
     end

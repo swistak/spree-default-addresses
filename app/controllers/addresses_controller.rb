@@ -49,6 +49,9 @@ class AddressesController < Spree::BaseController
     @bill_address = @user.bill_address || Address.default(@user)
 
     @countries = Country.find(:all).sort
+    @shipping_countries = ShippingMethod.all.collect{|method|
+      method.zone.country_list
+    }.flatten.uniq.sort_by{|item| item.name}
     default_country = @bill_address.country
     @states = default_country ? default_country.states.sort : []
     @addresses = [@bill_address, @ship_address]

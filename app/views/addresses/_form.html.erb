@@ -4,17 +4,19 @@
 
   <% if address_type == :ship_address %>
     <p>
-      <input id="ship_address_use_bill_address" name="ship_address[use_bill_address]" type="checkbox" checked="<%= @ship_address.same_as @bill_address %>"/>
+      <input id="ship_address_use_bill_address" name="ship_address[use_bill_address]" type="checkbox" checked="<%= @ship_address.same_as(@bill_address) %>"/>
       <label for="ship_address_use_bill_address" id="use_billing"><%= t("use_billing_address") %></label>
     </p>
+    <% visibility_style = @ship_address.same_as(@bill_address) ? ' style="display: none"' : "" %>
   <% end %>
 
-  <div id="<%= address_type %>">
+  <div id="<%= address_type %>" <%= visibility_style.to_s %>>
     <% ["firstname", "lastname", "address1", "address2", "country", "state", "city", "zipcode", "phone"].each do |field| %>
       <p id="p-<%= "#{address_type}-#{field}" %>" class="address-form-field">
         <%= address_form.label field, t(field, :scope => [:activerecord, :attributes, :address]) %>
         <% if field == "country" %>
-          <%= address_form.collection_select "#{field}_id", instance_variable_get("@#{field.pluralize}"), :id, :name, {:include_blank => true}, :class => field %><span class="req">*</span>
+          <% countries = address_type == :bill_address ? @countries : @shipping_countries %>
+          <%= address_form.collection_select "#{field}_id", countries, :id, :name, {}, {:class => field} %><span class="req">*</span>
           <%= address_form.error_message_on "#{field}_id" %>
         <% elsif  field == "state" %>
           <%= address_form.collection_select "#{field}_id", instance_variable_get("@#{field.pluralize}"), :id, :name, {}, :class => field %>

@@ -37,10 +37,8 @@ task :get_default_addresses => :environment do
       puts "#{user.email}: Found addresses"
       bill_address = last_order.bill_address
       ship_address = last_order.shipment.address
-      user.update_attributes!(
-        :bill_address_id => bill_address && bill_address.id,
-        :ship_address_id => ship_address && ship_address.id
-      )
+      user.update_attribute(:bill_address_id, bill_address && bill_address.id)
+      user.update_attribute(:ship_address_id, ship_address && ship_address.id)
     else
       puts "#{user.email}: Could not find any usefull addresses associated with user"
     end

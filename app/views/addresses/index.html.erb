@@ -15,21 +15,20 @@
   </style>
 <% end %>
 
-<% form_tag do %>
-  <ul class="addresses">
-    <% [:bill_address, :ship_address].each do |address_type| %>
-      <li>
-        <% fields_for address_type do |address_form| %>
-          <% address = instance_variable_get("@#{address_type}") %>
-          <%= render :partial => 'form', :locals => {
-            :address_type => address_type,
-            :address_form => address_form,
-            :address => address
-          } %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+<% form_tag({}, {:class => 'addresses'}) do %>
+  <% [:bill_address, :ship_address].each do |address_type| %>
+    <div class="address-edit">
+      <% fields_for address_type do |address_form| %>
+        <% address = instance_variable_get("@#{address_type}") %>
+        <%= render :partial => 'form', :locals => {
+          :address_type => address_type,
+          :address_form => address_form,
+          :address => address
+        } %>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="form-buttons">
     <input type="submit" class="submit primary" value="<%=t("update")%>"/>
   </div>
