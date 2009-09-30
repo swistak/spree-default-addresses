@@ -4,7 +4,7 @@
 
   <% if address_type == :ship_address %>
     <p>
-      <input id="ship_address_use_bill_address" name="ship_address[use_bill_address]" type="checkbox" checked="<%= @ship_address.same_as(@bill_address) %>"/>
+      <input id="ship_address_use_bill_address" name="ship_address[use_bill_address]" type="checkbox" <%= @ship_address.same_as(@bill_address) ? ' checked="true"' : '' %>/>
       <label for="ship_address_use_bill_address" id="use_billing"><%= t("use_billing_address") %></label>
     </p>
     <% visibility_style = @ship_address.same_as(@bill_address) ? ' style="display: none"' : "" %>
